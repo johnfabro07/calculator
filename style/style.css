@@ -1,0 +1,12 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    position: relative;
+    left: 30px;
+}
+#screen {
+    height: 50px;
+    width: 500px;
+    background: coral;
+}
