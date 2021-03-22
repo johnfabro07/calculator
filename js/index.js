@@ -1,13 +1,14 @@
 const screen = document.getElementById('screen');
-const numbers = document.getElementById('number-button-container');
-const numberButtons = numbers.childNodes;
-const operators = document.getElementById('operators');
-const operatorButtons = operators.childNodes;
 const equalButton = document.getElementById('equal');
 const clearButton = document.getElementById('clear');
 const changeSignButton = document.getElementById('sign');
 const dotButton = document.getElementById('dot');
 const deleteButton = document.getElementById('delete');
+const percentageButton = document.getElementById('percentage');
+const numbers = document.getElementById('number-button-container');
+const numberButtons = numbers.childNodes;
+const operators = document.getElementById('operators');
+const operatorButtons = operators.childNodes;
 
 let calculator = {
     input1: null,
@@ -22,15 +23,13 @@ let firstInputDone = false;
 let secondInputDone = false;
 let operationDone = false;
 
-//when -0. and add another number it changes the whole screen
-// same after inserted input1(-0) it only changes 0 not the negative
 
 numberButtons.forEach(button => {
     button.addEventListener('click', function() {
-        if (parseInt(screen.textContent) === 0) {
-            screen.textContent = button.id;
+        if (parseFloat(screen.textContent) === 0) {
+            inputFromZero(button)
         //ables user to input second operand or input 2    
-        } else if (firstInputDone && input1 !== 0) {
+        } else if (firstInputDone && input1 !== null) {
             secondInputInitializer()
             screen.textContent = button.id; 
         //ables user to input new set of operations after the previous one
@@ -91,26 +90,39 @@ equalButton.addEventListener('click', function() {
     reinitializer(); 
 });
 
-clearButton.addEventListener('click', function() {
-    screen.textContent = '0';
-    reset() 
-});
-
 changeSignButton.addEventListener('click', function(){
     if (screen.textContent[0] !== '-') {
         screen.textContent = '-' + screen.textContent;
     } else {
         screen.textContent = screen.textContent.slice(1, screen.textContent.length)
     }
+    if (firstInputDone && input1 !== null) {
+        secondInputInitializer()
+        screen.textContent = '-0';
+    } 
 });
 
 dotButton.addEventListener('click', function() {
     if (!(screen.textContent.includes('.'))) {
         screen.textContent += '.';
     }
+    if (firstInputDone && input1 !== null) {
+        secondInputInitializer()
+        screen.textContent = '0.';
+    } 
 });
 
+percentageButton.addEventListener('click', function(){
+    let number = parseFloat(screen.textContent);
+    screen.textContent = number / 100;
+})
+
 deleteButton.addEventListener('click', deleteNumber);
+
+clearButton.addEventListener('click', function() {
+    screen.textContent = '0';
+    reset() 
+});
 
 function equate(input1, input2, operator) {
     if (operator === 'add') {
@@ -128,6 +140,14 @@ function equate(input1, input2, operator) {
     }
     screen.textContent = answer;
 };
+
+function inputFromZero(button) {
+    if (!screen.textContent.includes('.')) {
+        screen.textContent = screen.textContent.replace('0', button.id);
+    } else {
+        screen.textContent += button.id;
+    }
+}
 // reinitializes the input screen for second input
 function secondInputInitializer() {
     firstInputDone = false;
