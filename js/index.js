@@ -15,29 +15,38 @@ let calculator = {
     input2: null,
     operator: null,
     answer: null,
-    //[input1, input2]
+    //previous[input1, input2]
     previousInput: [null, null]
 }
 let {input1, input2, operator, answer, previousInput} = calculator
 let firstInputDone = false;
 let secondInputDone = false;
 let operationDone = false;
-
+let digitLimit = 0;
 
 numberButtons.forEach(button => {
     button.addEventListener('click', function() {
-        if (parseFloat(screen.textContent) === 0) {
-            inputFromZero(button)
-        //ables user to input second operand or input 2    
-        } else if (firstInputDone && input1 !== null) {
-            secondInputInitializer()
-            screen.textContent = button.id; 
-        //ables user to input new set of operations after the previous one
-        } else if(operationDone && secondInputDone === false) {
-            reset();
-            screen.textContent = button.id;
-        } else {
-            screen.textContent += button.id;
+        //condition that counts the number of times a number button is clicked 
+        //to limit input
+        if (digitLimit < 9) {
+            if (parseFloat(screen.textContent) === 0) {
+            //prevents incrementing digitLimit if number button 0 is clicked as starting input
+                if (parseFloat(screen.textContent) === parseFloat(button.id)) {
+                    digitLimit = -1;
+                };
+                inputFromZero(button)
+            //ables user to input second operand or input 2    
+            } else if (firstInputDone && input1 !== null) {
+                secondInputInitializer()
+                screen.textContent = button.id; 
+            //ables user to input new set of operations after the previous one
+            } else if(operationDone && secondInputDone === false) {
+                reset();
+                screen.textContent = button.id;
+            } else {
+                screen.textContent += button.id;
+            }
+            digitLimit++;
         }
     })
 });
@@ -59,6 +68,7 @@ operatorButtons.forEach(operatorButton => {
         }  
         operator = operatorButton.id;
         firstInputDone = true;
+        digitLimit = 0;
     });
 });
 
@@ -71,7 +81,7 @@ equalButton.addEventListener('click', function() {
         if (input2 === null) {
             equate(input1, previousInput[0], operator);
             previousInput[1] = previousInput[0]
-        //defaults second operand as input2 while user clicks equal button consecutively 
+        //defaults second operand as input2 if user clicks equal button consecutively 
         //stores input2 to [previousInput[1]] 
         } else {
             equate(input1, input2, operator);
@@ -82,7 +92,7 @@ equalButton.addEventListener('click', function() {
         if (input1 === 0 && previousInput[1] !== null) {
             input2 = previousInput[1];
         } else {
-            //captures the screen and uses it as input2
+        //captures the screen and uses it as input2
             input2 = parseFloat(screen.textContent);
         }
         equate(input1, input2, operator);  
@@ -99,16 +109,24 @@ changeSignButton.addEventListener('click', function(){
     if (firstInputDone && input1 !== null) {
         secondInputInitializer()
         screen.textContent = '-0';
+        digitLimit = 1;
     } 
 });
 
 dotButton.addEventListener('click', function() {
-    if (!(screen.textContent.includes('.'))) {
-        screen.textContent += '.';
+    if (digitLimit > -1 && digitLimit < 9) {
+        if (!(screen.textContent.includes('.'))) {
+            screen.textContent += '.';
+        // increments digitLimit if user adds a decimal point while calculator screen is '0'
+            if (parseFloat(screen.textContent) === 0) {
+                digitLimit = 1;
+            }
+        }
     }
     if (firstInputDone && input1 !== null) {
         secondInputInitializer()
         screen.textContent = '0.';
+        digitLimit = 1;
     } 
 });
 
@@ -138,6 +156,11 @@ function equate(input1, input2, operator) {
             answer = input1 / input2
         }
     }
+    if (answer > 999999999 || answer < -999999999) {
+        answer = answer.toExponential(4);
+    } else if (answer.toString().length > 9) {
+        answer = answer.toPrecision(9)
+    }
     screen.textContent = answer;
 };
 
@@ -156,15 +179,33 @@ function secondInputInitializer() {
 // reinitializes the input screen after an execution of an operation 
 function reinitializer() {
     input1 = answer;
-    secondInputDone = false;
-    firstInputDone = false
     answer = null;
+    firstInputDone = false;
+    secondInputDone = false;
     operationDone = true;
+    digitLimit = 0;
 };
 
 function deleteNumber() {
+//prevent backspace from decrementing from digitLimit when decimal point is deleted.
+    let digitsOnScreen = screen.textContent.toString();
+    let length = digitsOnScreen.length;
+    if (digitLimit > 0) {
+        if (!(digitsOnScreen[length - 1] === '.')) {
+            digitLimit -= 1;
+        }
+    };
+//deletes last item in the string
     screen.textContent = screen.textContent.toString().slice(0, -1);
+
+//prevents 0 from being recognized as raw text or input to delete
+    if (parseFloat(screen.textContent) === 0) {
+        digitLimit = 0;
+    }
     if (screen.textContent.length === 0) {
+        screen.textContent = `0`;
+    };
+    if (screen.textContent.length === 1 && screen.textContent[0] === '-') {
         screen.textContent = `0`;
     };
 };
@@ -178,4 +219,5 @@ function reset() {
     firstInputDone = false;
     secondInputDone = false;
     operationDone = false;
+    digitLimit = 0;
 };

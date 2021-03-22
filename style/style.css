@@ -5,8 +5,14 @@ body {
     position: relative;
     left: 30px;
 }
-#screen {
+#screen-container {
     height: 50px;
-    width: 500px;
+    width: 100px;
     background: coral;
+    display: flex;
+}
+
+#screen {
+    flex: 1;
+    text-align: right;
 }
