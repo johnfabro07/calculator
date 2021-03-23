@@ -126,8 +126,10 @@ dotButton.addEventListener('click', function() {
         screen.textContent = '0.';
         digitLimit = 1;
     }
-    if (operationDone &&firstInputDone === false && secondInputDone === false) {
+    if (operationDone && firstInputDone === false && secondInputDone === false) {
         reset()
+        screen.textContent = '0.';
+        digitLimit = 1;
     }
 });
 
