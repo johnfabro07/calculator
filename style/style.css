@@ -1,18 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 * {
+    margin: 0px;
+    padding: 0px;
     box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
 }
 body {
-    position: relative;
-    left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(239,45,79,255);
 }
-#screen-container {
-    height: 50px;
-    width: 100px;
-    background: coral;
+
+.calculator {
+    position: relative;
+    margin: 50px 100px 50px 100px;
+    padding: 10px 22px 20px 22px;
+    display: flex;
+    flex-direction: column;
+    height: 539px;
+    min-width: 308px;
+    background: #fff;
+    border: #fff;
+    border-radius: 28px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
+}
+
+.calculator-screen {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calculator-name {
+    flex: 0.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(238,46,78,255);
+}
+div[data-line='line'], div[data-line='line2'] {
+    position: absolute;
+    width: 100%;
+    height: 2.3px;
+    border: transparent;
+    border-radius: 5px;
+}
+div[data-line='line'] {
+    top: 16px;
+    background: rgba(204,204,204,255);
+}
+div[data-line='line2'] {
+    bottom: -1px;
+    background: rgba(230,230,230,255);
+}
+
+.indicator {
+    height: 5px;
+    width: 130px;
+    background: rgba(238,46,78,255);
+    border: transparent;
+    border-radius: 10px;
+    z-index: 1;
+}
+.screen-container {
+    flex: 1;
+    width: 100%;
+    height: 100%;
     display: flex;
 }
 
-#screen {
+.switch-mode-container {
     flex: 1;
-    text-align: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: flex;
+    width: 19.2px;
+    height: 40px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12.8px;
+    width: 12.8px;
+    right: 3.2px;
+    top: 3.2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #ef2d4f;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px transparent;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateY(20.8px);
+    -ms-transform: translateY(20.8px);
+    transform: translateY(20.8px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#screen {
+    flex: 7;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    max-width: 235px;
+    font-weight: 500;
+    font-size: 40px;
+    color: rgba(238,46,78,255);
+}
+
+
+.calculator-buttons {
+    flex: 2;
+    max-width: 264px;
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-gap: 10px 20px;
+    grid-template-areas:
+        "clear sign percentage divide"
+        "seven eight nine multiply"
+        "four five six subtract"
+        "one two three add"
+        "zero zero dot equal";
+}
+
+button {
+    display:block;
+    height: 43px;
+    width: 43px;
+    border-radius: 50%;
+    border: 1px transparent;
+    justify-self: center;
+    align-self: center;
+    outline: none;
+    font-size: 24px;
+    background: rgba(230,230,230,255);
+    cursor: pointer;
+    transition: 0.7s;
+}
+
+
+#clear {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+#sign {
+    font-size: 15px;
+    font-weight: 700;
+}
+#divide {
+    grid-area: divide;
+}
+
+#multiply {
+    grid-area: multiply;
+}
+
+#subtract {
+    grid-area: subtract;
+}
+#add {
+    grid-area: add;
+}
+
+.zero {
+    grid-area: zero;
+    width: 115px;
+    border-radius: 25px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+#dot {
+    grid-area: dot;
+}
+
+#equal {
+    grid-area: equal;
+}
+#delete {
+    visibility: hidden;
+}
+
+.misc {
+    background: rgba(51,51,51,255);
+    color: white;
+}
+
+.operator-button {
+    background: #ef2d4f;
+    color: white;
 }

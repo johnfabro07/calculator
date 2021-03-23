@@ -5,11 +5,9 @@ const changeSignButton = document.getElementById('sign');
 const dotButton = document.getElementById('dot');
 const deleteButton = document.getElementById('delete');
 const percentageButton = document.getElementById('percentage');
-const numbers = document.getElementById('number-button-container');
-const numberButtons = numbers.childNodes;
-const operators = document.getElementById('operators');
-const operatorButtons = operators.childNodes;
-
+const numberButtons = document.querySelectorAll("[data-number]");
+const operatorButtons = document.querySelectorAll("[data-operator]");
+console.log(numberButtons);
 let calculator = {
     input1: null,
     input2: null,
@@ -132,7 +130,13 @@ dotButton.addEventListener('click', function() {
 
 percentageButton.addEventListener('click', function(){
     let number = parseFloat(screen.textContent);
-    screen.textContent = number / 100;
+    let answer = number / 100;
+    if (answer > 999999999 || answer < -999999999) {
+        answer = answer.toExponential(3);
+    } else if (answer.toString().length > 5) {
+        answer = answer.toPrecision(5)
+    }
+    screen.textContent = answer;
 })
 
 deleteButton.addEventListener('click', deleteNumber);
@@ -157,7 +161,7 @@ function equate(input1, input2, operator) {
         }
     }
     if (answer > 999999999 || answer < -999999999) {
-        answer = answer.toExponential(4);
+        answer = answer.toExponential(3);
     } else if (answer.toString().length > 9) {
         answer = answer.toPrecision(9)
     }
@@ -186,6 +190,16 @@ function reinitializer() {
     digitLimit = 0;
 };
 
+function roundOff(answer) {
+    let roundedOff = 0;
+    if (answer > 999999999 || answer < -999999999) {
+        roundedOff = answer.toExponential(3);
+    } else if (answer.toString().length > 9) {
+        roundedOff = answer.toPrecision(9)
+    }
+    return roundedOff
+}
+
 function deleteNumber() {
 //prevent backspace from decrementing from digitLimit when decimal point is deleted.
     let digitsOnScreen = screen.textContent.toString();
@@ -208,6 +222,9 @@ function deleteNumber() {
     if (screen.textContent.length === 1 && screen.textContent[0] === '-') {
         screen.textContent = `0`;
     };
+    if (operationDone && secondInputDone === false) {
+        reset()
+    }
 };
 
 function reset() {
