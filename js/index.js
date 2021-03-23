@@ -125,7 +125,10 @@ dotButton.addEventListener('click', function() {
         secondInputInitializer()
         screen.textContent = '0.';
         digitLimit = 1;
-    } 
+    }
+    if (operationDone && secondInputDone === false) {
+        reset()
+    }
 });
 
 percentageButton.addEventListener('click', function(){
@@ -189,16 +192,6 @@ function reinitializer() {
     operationDone = true;
     digitLimit = 0;
 };
-
-function roundOff(answer) {
-    let roundedOff = 0;
-    if (answer > 999999999 || answer < -999999999) {
-        roundedOff = answer.toExponential(3);
-    } else if (answer.toString().length > 9) {
-        roundedOff = answer.toPrecision(9)
-    }
-    return roundedOff
-}
 
 function deleteNumber() {
 //prevent backspace from decrementing from digitLimit when decimal point is deleted.
