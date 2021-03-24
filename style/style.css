@@ -6,6 +6,26 @@
     box-sizing: border-box;
     font-family: 'Rubik', sans-serif;
 }
+
+/* light mode */
+:root {
+    --base-color: #fff;
+    --main-text-color: rgba(239,45,79,255);
+    --button-color: rgba(230,230,230,255);
+    --button-text-clr: #000;
+    --clr-button-function: rgba(51,51,51,255);
+    --text-button-function: #fff;
+}
+
+.dark-mode {
+    --base-color: rgba(24,24,24,255);
+    --main-text-color: #fff;
+    --button-color: rgba(51,51,51,255);
+    --button-text-clr: #fff;
+    --clr-button-function: rgba(230,230,230,255);
+    --text-button-function: #000;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -19,9 +39,11 @@ body {
     padding: 10px 22px 20px 22px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     height: 539px;
+    min-height: 539px;
     min-width: 308px;
-    background: #fff;
+    background: var(--base-color);
     border: #fff;
     border-radius: 28px;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
@@ -33,16 +55,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .calculator-name {
+    position: absolute;
     flex: 0.1;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
     font-weight: 300;
-    color: rgba(238,46,78,255);
+    color: var(--main-text-color);
 }
 div[data-line='line'], div[data-line='line2'] {
     position: absolute;
@@ -61,6 +85,8 @@ div[data-line='line2'] {
 }
 
 .indicator {
+    position: absolute;
+    top: 15px;
     height: 5px;
     width: 130px;
     background: rgba(238,46,78,255);
@@ -78,7 +104,7 @@ div[data-line='line2'] {
 .switch-mode-container {
     flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
 }
 
@@ -150,7 +176,7 @@ input:checked + .slider:before {
     max-width: 235px;
     font-weight: 500;
     font-size: 38px;
-    color: rgba(238,46,78,255);
+    color: var(--main-text-color);
     overflow: hidden;
 }
 
@@ -181,9 +207,10 @@ button {
     align-self: center;
     outline: none;
     font-size: 24px;
-    background: rgba(230,230,230,255);
+    background: var(--button-color);
+    color: var(--button-text-clr);
     cursor: pointer;
-    transition: 0.7s;
+    transition: 0.3s;
 }
 
 
@@ -231,11 +258,23 @@ button {
 }
 
 .misc {
-    background: rgba(51,51,51,255);
-    color: white;
+    background: var(--clr-button-function);
+    color: var(--text-button-function);
 }
 
 .operator-button {
     background: #ef2d4f;
     color: white;
+}
+
+@media only screen and (max-width: 450px) { 
+    .calculator {
+        margin: 20px;
+        margin-bottom: 30px;
+        height: 100vh;
+        width: 100vw;
+    }
+    .calculator-buttons {
+        min-width: 100%;
+    }
 }

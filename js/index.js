@@ -2,6 +2,7 @@ const screen = document.getElementById('screen');
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
 const otherButtons = document.querySelectorAll("[data-function]");
+const switchMode = document.getElementById('input-color-switch');
 
 let calculator = {
     input1: null,
@@ -50,6 +51,8 @@ otherButtons.forEach(button => {
         if (e.target.id === "clear") clear();
     })
 });
+
+switchMode.addEventListener('click', checkMode);
 
 function inputNumber(button) {
     //condition that counts the number of times a number button is clicked 
@@ -258,3 +261,19 @@ function reset() {
     operationDone = false;
     digitLimit = 0;
 };
+
+function checkMode() {
+    if (switchMode.checked) {
+        darkModeOn();
+    } else {
+        darkModeOff();
+    }
+}
+
+function darkModeOn() {
+    document.body.classList.add("dark-mode");
+}
+
+function darkModeOff() {
+    document.body.classList.remove("dark-mode");
+}
