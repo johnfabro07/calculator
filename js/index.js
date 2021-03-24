@@ -1,4 +1,5 @@
 const screen = document.getElementById('screen');
+const buttons = document.querySelectorAll('button');
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
 const otherButtons = document.querySelectorAll("[data-function]");
@@ -32,6 +33,7 @@ window.addEventListener('keydown', function(e) {
     if (e.key === '%') percentage();
     if (e.key === 'Backspace') deleteNumber();
     if (e.key === 'Delete') clear();
+    if (e.key === "d") toggleMode(); 
 })
 
 numberButtons.forEach(button => {
@@ -45,14 +47,18 @@ operatorButtons.forEach(operatorButton => {
 otherButtons.forEach(button => {
     button.addEventListener('click', function(e) {
         if (e.target.id === "equal") equalFunction();
-        if (e.target.id === "sign") changeSign();
-        if (e.target.id === "dot") insertDot();
-        if (e.target.id === "percentage") percentage();
+        if (e.target.id === "sign") changeSign(e);
+        if (e.target.id === "dot") insertDot(e);
+        if (e.target.id === "percentage") percentage(e);
         if (e.target.id === "clear") clear();
     })
 });
 
 switchMode.addEventListener('click', checkMode);
+
+buttons.forEach(button => button.addEventListener('transitionend', function(e) {
+    removeTransition(e);
+}));
 
 function inputNumber(button) {
     //condition that counts the number of times a number button is clicked 
@@ -76,6 +82,7 @@ function inputNumber(button) {
             screen.textContent += button.id;
         };
         digitLimit++;
+        clickTransistion(button);
     };
 };
 
@@ -96,9 +103,10 @@ function inputOperator(operatorButton) {
     operator = operatorButton.id;
     firstInputDone = true;
     digitLimit = 0;
+    operatorButton.classList.add('button-click');
 };
 
-function equalFunction() {
+function equalFunction(e) {
     if (operator === null) {
         return null;
     } else if (answer === null && input1 !== 0 && secondInputDone === false) {
@@ -127,7 +135,7 @@ function equalFunction() {
     reinitializer(); 
 };
 
-function changeSign(){
+function changeSign(e){
     if (screen.textContent[0] !== '-') {
         screen.textContent = '-' + screen.textContent;
     } else {
@@ -138,9 +146,10 @@ function changeSign(){
         screen.textContent = '-0';
         digitLimit = 1;
     };
+    e.target.classList.add('button-click');
 };
 
-function insertDot() {
+function insertDot(e) {
     if (digitLimit > -1 && digitLimit < 9) {
         if (!(screen.textContent.includes('.'))) {
             screen.textContent += '.';
@@ -160,9 +169,10 @@ function insertDot() {
         screen.textContent = '0.';
         digitLimit = 1;
     };
+    e.target.classList.add('button-click');
 };
 
-function percentage(){
+function percentage(e){
     let number = parseFloat(screen.textContent);
     let answer = number / 100;
     if (answer > 999999999 || answer < -999999999) {
@@ -172,6 +182,7 @@ function percentage(){
     };
     screen.textContent = answer;
     reinitializer(); 
+    e.target.classList.add('button-click');
 };
 
 function clear() {
@@ -262,6 +273,16 @@ function reset() {
     digitLimit = 0;
 };
 
+function toggleMode() {
+    if (switchMode.checked === false) {
+        switchMode.checked = true; 
+        darkModeOn();
+    } else if (switchMode.checked === true) {
+        switchMode.checked = false; 
+        darkModeOff();
+    } 
+}
+
 function checkMode() {
     if (switchMode.checked) {
         darkModeOn();
@@ -276,4 +297,18 @@ function darkModeOn() {
 
 function darkModeOff() {
     document.body.classList.remove("dark-mode");
+}
+
+function removeTransition(e) {
+    if (e.propertyName !== 'filter') return;
+        e.target.classList.remove('button-click');
+        e.target.classList.remove('button-click-light');
+}
+
+function clickTransistion(e) {
+    if (switchMode.checked) {
+        e.classList.add('button-click');
+    } else {
+        e.classList.add('button-click-light');
+    }
 }
