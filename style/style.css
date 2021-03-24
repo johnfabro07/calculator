@@ -149,8 +149,9 @@ input:checked + .slider:before {
     padding-bottom: 10px;
     max-width: 235px;
     font-weight: 500;
-    font-size: 40px;
+    font-size: 38px;
     color: rgba(238,46,78,255);
+    overflow: hidden;
 }
 
 
