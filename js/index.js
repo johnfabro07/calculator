@@ -48,7 +48,7 @@ otherButtons.forEach(button => {
     button.addEventListener('click', function(e) {
         if (e.target.id === "equal") equalFunction();
         if (e.target.id === "sign") changeSign(e);
-        if (e.target.id === "dot") insertDot(e);
+        if (e.target.id === "dot") insertDot();
         if (e.target.id === "percentage") percentage(e);
         if (e.target.id === "clear") clear();
     })
@@ -149,7 +149,7 @@ function changeSign(e){
     e.target.classList.add('button-click');
 };
 
-function insertDot(e) {
+function insertDot() {
     if (digitLimit > -1 && digitLimit < 9) {
         if (!(screen.textContent.includes('.'))) {
             screen.textContent += '.';
@@ -169,7 +169,6 @@ function insertDot(e) {
         screen.textContent = '0.';
         digitLimit = 1;
     };
-    e.target.classList.add('button-click');
 };
 
 function percentage(e){
