@@ -1,9 +1,9 @@
 const screen = document.getElementById('screen');
+const switchMode = document.getElementById('input-color-switch');
 const buttons = document.querySelectorAll('button');
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
 const otherButtons = document.querySelectorAll("[data-function]");
-const switchMode = document.getElementById('input-color-switch');
 
 let calculator = {
     input1: null,
@@ -19,22 +19,6 @@ let firstInputDone = false;
 let secondInputDone = false;
 let operationDone = false;
 let digitLimit = 0;
-
-window.addEventListener('keydown', function(e) {
-    const number = document.querySelector(`button[id="${e.key}"]`);
-    const currentOperator = document.querySelector(`button[data-operator="${e.key}"]`);
-    if (e.key >= 0 || e.key < 10) inputNumber(number);
-    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
-        inputOperator(currentOperator);
-    }
-    if (e.key === 'Enter' || e.key === '=') equalFunction();
-    if (e.key === 'c') changeSign();
-    if (e.key === '.') insertDot();
-    if (e.key === '%') percentage();
-    if (e.key === 'Backspace') deleteNumber();
-    if (e.key === 'Delete') clear();
-    if (e.key === "d") toggleMode(); 
-})
 
 numberButtons.forEach(button => {
     button.addEventListener('click', e => inputNumber(e.target));
@@ -56,6 +40,23 @@ otherButtons.forEach(button => {
 
 switchMode.addEventListener('click', checkMode);
 
+window.addEventListener('keydown', function(e) {
+    const number = document.querySelector(`button[id="${e.key}"]`);
+    const currentOperator = document.querySelector(`button[data-operator="${e.key}"]`);
+    
+    if (e.key >= 0 || e.key < 10) inputNumber(number);
+    if (e.key === 'Enter' || e.key === '=') equalFunction();
+    if (e.key === 'c') changeSign();
+    if (e.key === '.') insertDot();
+    if (e.key === '%') percentage();
+    if (e.key === 'Backspace') deleteNumber();
+    if (e.key === 'Delete') clear();
+    if (e.key === "d") toggleMode(); 
+    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        inputOperator(currentOperator);
+    }
+});
+
 buttons.forEach(button => button.addEventListener('transitionend', function(e) {
     removeTransition(e);
 }));
@@ -65,7 +66,8 @@ function inputNumber(button) {
     //to limit input
     if (digitLimit < 9) {
         if (parseFloat(screen.textContent) === 0) {
-        //prevents incrementing digitLimit if number button 0 is clicked as starting input
+        //prevents incrementing digitLimit 
+        //if number button 0 is clicked as starting input
             if (parseFloat(screen.textContent) === parseFloat(button.id)) {
                 digitLimit = -1;
             };
@@ -75,14 +77,14 @@ function inputNumber(button) {
             secondInputInitializer()
             screen.textContent = button.id; 
         //ables user to input new set of operations after the previous one
-        } else if(operationDone && secondInputDone === false) {
+        } else if (operationDone && secondInputDone === false) {
             reset();
             screen.textContent = button.id;
         } else {
             screen.textContent += button.id;
         };
         digitLimit++;
-        clickTransistion(button);
+        clickTransition(button);
     };
 };
 
@@ -100,24 +102,21 @@ function inputOperator(operatorButton) {
         input1 = parseFloat(screen.textContent);
         previousInput[0] = input1;
     };
-    operator = operatorButton.id;
     firstInputDone = true;
+    operator = operatorButton.id;
     digitLimit = 0;
     operatorButton.classList.add('button-click');
 };
 
-function equalFunction(e) {
+function equalFunction() {
     if (operator === null) {
         return null;
     } else if (answer === null && input1 !== 0 && secondInputDone === false) {
-        //captures input1 as input2 
-        //if user clicked equal button before inputting the second operand.
-        //stores input1 to [previousInput[1]]
+        //if user clicked equal button before inputting the second operand
         if (input2 === null) {
             equate(input1, previousInput[0], operator);
             previousInput[1] = previousInput[0]
         //defaults second operand as input2 if user clicks equal button consecutively 
-        //stores input2 to [previousInput[1]] 
         } else {
             equate(input1, input2, operator);
             previousInput[1] = input2;
@@ -127,7 +126,6 @@ function equalFunction(e) {
         if (input1 === 0 && previousInput[1] !== null) {
             input2 = previousInput[1];
         } else {
-        //captures the screen and uses it as input2
             input2 = parseFloat(screen.textContent);
         };
         equate(input1, input2, operator);  
@@ -141,6 +139,7 @@ function changeSign(e){
     } else {
         screen.textContent = screen.textContent.slice(1, screen.textContent.length)
     };
+
     if (firstInputDone && input1 !== null) {
         secondInputInitializer()
         screen.textContent = '-0';
@@ -164,7 +163,8 @@ function insertDot() {
         screen.textContent = '0.';
         digitLimit = 1;
     };
-    if (operationDone && firstInputDone === false && secondInputDone === false) {
+    if (operationDone && firstInputDone === false && 
+        secondInputDone === false) {
         reset()
         screen.textContent = '0.';
         digitLimit = 1;
@@ -174,12 +174,8 @@ function insertDot() {
 function percentage(e){
     let number = parseFloat(screen.textContent);
     let answer = number / 100;
-    if (answer > 999999999 || answer < -999999999) {
-        answer = answer.toExponential(3);
-    } else if (answer.toString().length > 8) {
-        answer = answer.toPrecision(3)
-    };
-    screen.textContent = answer;
+    
+    screen.textContent = formatAnswer(answer);
     reinitializer(); 
     e.target.classList.add('button-click');
 };
@@ -203,13 +199,18 @@ function equate(input1, input2, operator) {
             answer = input1 / input2
         };
     };
+    screen.textContent = formatAnswer(answer);
+};
+
+function formatAnswer(answer) {
     if (answer > 999999999 || answer < -999999999) {
         answer = answer.toExponential(3);
-    } else if (answer.toString().length > 9) {
-        answer = answer.toPrecision(9)
-    };
-    screen.textContent = answer;
-};
+    } 
+    if (answer.toString().length > 9) {
+        answer = parseFloat(answer).toPrecision(3);
+    }
+    return answer;
+}
 
 function inputFromZero(button) {
     if (!screen.textContent.includes('.')) {
@@ -242,17 +243,14 @@ function deleteNumber() {
             digitLimit -= 1;
         };
     };
-//deletes last item in the string
     screen.textContent = screen.textContent.toString().slice(0, -1);
 
 //prevents 0 from being recognized as raw text or input to delete
     if (parseFloat(screen.textContent) === 0) {
         digitLimit = 0;
     };
-    if (screen.textContent.length === 0) {
-        screen.textContent = `0`;
-    };
-    if (screen.textContent.length === 1 && screen.textContent[0] === '-') {
+    if (screen.textContent.length === 0 || 
+        screen.textContent.length === 1 && screen.textContent[0] === '-') {
         screen.textContent = `0`;
     };
     if (operationDone && secondInputDone === false) {
@@ -304,7 +302,7 @@ function removeTransition(e) {
         e.target.classList.remove('button-click-light');
 }
 
-function clickTransistion(e) {
+function clickTransition(e) {
     if (switchMode.checked) {
         e.classList.add('button-click');
     } else {
