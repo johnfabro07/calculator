@@ -210,7 +210,7 @@ function formatAnswer(answer) {
         answer = parseFloat(answer).toPrecision(3);
     }
     return answer;
-}
+};
 
 function inputFromZero(button) {
     if (!screen.textContent.includes('.')) {
