@@ -1,54 +1,48 @@
+import { Display } from './calculatorUI.js';
+import { Input } from './input.js';
+
 class Calculator {
-	constructor(input1 = null, input2 = null, operator = null, answer = null) {
-		this._input1 = input1;
-		this._input2 = input2;
-		this._operator = operator;
-		this._answer = answer;
+	constructor(
+		previousOperand = 'null',
+		currentOperand = 'null',
+		operator = 'null'
+	) {
+		this.Display = new Display();
+		this.Input = new Input();
+		this.previousOperand = previousOperand;
+		this.currentOperand = currentOperand;
+		this.operator = operator;
 	}
 
-	equate() {
+	calculate() {
 		let answer;
 
-		if (this._operator === 'add') {
-			answer = this._input1 + this._input2;
+		if (this.operator === 'add') {
+			answer = input1 + input2;
 		}
 
-		if (this._operator === 'subtract') {
-			answer = this._input1 - this._input2;
+		if (operator === 'subtract') {
+			answer = input1 - input2;
 		}
 
-		if (this._operator === 'multiply') {
-			answer = this._input1 * this._input2;
+		if (operator === 'multiply') {
+			answer = input1 * input2;
 		}
 
-		if (this._operator === 'divide') {
-			if (this._input2 === 0) {
+		if (operator === 'divide') {
+			if (input2 === 0) {
 				answer = 'undefined';
 			} else {
-				answer = this._input1 / this._input2;
+				answer = input1 / input2;
 			}
 		}
 
 		return answer;
 	}
 
-	setAnswerToInput1(answer) {
-		this._input1 = answer;
-	}
-
-	setInput1()
-
-	changeOperation(newOperator) {
-		this._operator = newOperator;
-	}
-
-	reset() {
-		this._input1 = null;
-		this._input2 = null;
-		this._operator = null;
-		this._answer = null;
+	run() {
+		this.Input.test1();
 	}
 }
 
-
-export { Calculator }
+export { Calculator };

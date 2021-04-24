@@ -1,9 +1,15 @@
-import { Calculator } from './calculator.js';
-import { Input } from './input.js';
+class Display {
+	constructor(screenId = 'screen') {
+		this.screen = document.getElementById(screenId);
+	}
 
-class CalculatorUI {
-	constructor() {
-		this.Calculator = new Calculator();
-		this.Input = new Input(this.Calculator);
+	appendNumber(number) {
+		this.screen.textContent = number;
+	}
+
+	deleteNumber() {
+		this.screen.textContent = this.screen.textContent.toString().slice(0, -1);
 	}
 }
+
+export { Display };
