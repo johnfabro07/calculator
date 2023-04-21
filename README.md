@@ -35,7 +35,6 @@ A simple calculator application webpage that uses HTML, CSS, and Javascript. It 
 
 ## Authors
 
-John Reymar I. Fabro(Me)
 [@juanfab.af](https://www.instagram.com/juanfab.af/)
 
 ## Acknowledgments
